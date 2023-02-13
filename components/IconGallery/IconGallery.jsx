@@ -26,7 +26,8 @@ export const IconGallery = ({ icons }) => {
     <div className={styles.Container}>
       {categorizedItems.map((category, key) => {
         return (
-          <div className={styles.Scroller} key={key}>
+          <div>
+            {category[0].attributes.Category}
             {category.map((icon, key) => {
               return (
                 <div className={styles.IconWrapper} key={key}>

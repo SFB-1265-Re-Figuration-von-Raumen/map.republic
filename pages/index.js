@@ -8,10 +8,10 @@ export default function Home({ icons }) {
 
 export const getStaticProps = async () => {
   const icons = await fetcher(
-    `${process.env.STRAPI_PUBLIC_URL}/icons?populate=*`,
+    `${process.env.NEXT_PUBLIC_STRAPI_URL}/icons?populate=*`,
     {
       headers: {
-        Authorization: `bearer ${process.env.API_TOKEN_SALT}`,
+        Authorization: `bearer ${process.env.API_TOKEN}`,
       },
     }
   );
