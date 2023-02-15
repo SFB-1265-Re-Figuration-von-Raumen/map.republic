@@ -26,22 +26,24 @@ export const IconGallery = ({ icons }) => {
     <div className={styles.Container}>
       {categorizedItems.map((category, key) => {
         return (
-          <div>
+          <div className={styles.CategoryWrapper}>
             {category[0].attributes.Category}
-            {category.map((icon, key) => {
-              return (
-                <div className={styles.IconWrapper} key={key}>
-                  <Image
-                    src={icon.attributes.Icon.data.attributes.url}
-                    key={key}
-                    width={icon.attributes.Icon.data.attributes.width}
-                    height={icon.attributes.Icon.data.attributes.height}
-                    alt={icon.attributes.Title}
-                  />
-                  <h3>{icon.attributes.Title}</h3>
-                </div>
-              );
-            })}
+            <div className={styles.Scroller}>
+              {category.map((icon, key) => {
+                return (
+                  <div className={styles.IconWrapper} key={key}>
+                    <Image
+                      src={icon.attributes.Icon.data.attributes.url}
+                      key={key}
+                      width={icon.attributes.Icon.data.attributes.width}
+                      height={icon.attributes.Icon.data.attributes.height}
+                      alt={icon.attributes.Title}
+                    />
+                    <p className={styles.IconTitle}>{icon.attributes.Title}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         );
       })}
