@@ -7,6 +7,7 @@ export const IconGallery = ({ icons }) => {
   // find all unique categories in the icons
   const categories = icons.data?.map((icon) => icon.attributes.Category);
   const uniqueCategories = [...new Set(categories)];
+  console.log("unique categories:")
   console.log(uniqueCategories);
 
   // for each unique category, filter the icons and create a new array
@@ -16,11 +17,11 @@ export const IconGallery = ({ icons }) => {
       (icon) => icon.attributes.Category === uniqueCategories[i]
     );
     categorizedItems.push(filteredIcons);
-    console.log(`logging filtered icons for ${uniqueCategories[i]}`);
-    console.log(filteredIcons);
+    // console.log(`logging filtered icons for ${uniqueCategories[i]}`)
+    // console.log(filteredIcons);
   }
 
-  console.log(categorizedItems);
+  // console.log(categorizedItems);
 
   return (
     <div className={styles.Container}>
@@ -41,11 +42,11 @@ export const IconGallery = ({ icons }) => {
                     />
                     <p className={styles.IconTitle}>{icon.attributes.Title}</p>
                   </div>
-                );
+                )
               })}
             </div>
           </div>
-        );
+        )
       })}
     </div>
   );
