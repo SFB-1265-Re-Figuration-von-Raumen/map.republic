@@ -5,6 +5,7 @@ import Layout from '@/components/Layout/Layout';
 import { fetcher } from '@/pages/api/fetcher';
 import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/pages/api/auth';
 import { useFetchUser } from '@/pages/api/authContext';
+
 const Profile = ({ avatar }) => {
     const { user, loading } = useFetchUser();
     const [image, setImage] = useState(null);

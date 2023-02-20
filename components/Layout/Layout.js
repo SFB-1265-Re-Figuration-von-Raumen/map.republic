@@ -1,4 +1,4 @@
-import Nav from '@/components/Nav';
+import Nav from '@/components/Nav/Nav';
 import { UserProvider } from '@/pages/api/authContext';
 
 const Layout = ({ user, loading = false, children }) => (
