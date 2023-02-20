@@ -35,6 +35,7 @@ const AvatarGenerator = () => {
     };
 
     const uploadToServer = async () => {
+        console.log(Attributes)
         const formData = new FormData();
         const avatar = Attributes;
         formData.append('Avatar', avatar);
@@ -96,7 +97,7 @@ const AvatarGenerator = () => {
             </div>
             <button
                 type="submit"
-                onClick={() => uploadToServer}
+                onClick={() => uploadToServer()}
                 className={styles.SubmitAvatar}
             >
                 Set Profile Image
