@@ -3,7 +3,7 @@ var options = [
         label: "Avatar Style",
         type: "avatarStyle",
         attribute: "avatarStyle",
-        values: ["Circle", "Transparent"],
+        values: ["Kreis", "Transparent"],
         colorAttribute: "",
         colors: {},
     },
