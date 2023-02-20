@@ -6,9 +6,10 @@
     padding: 1rem;
 
     .AvatarWrapper {
-        border: 2px solid rgb(37, 227, 16);
+        // border: 2px solid rgb(210, 81, 30);
         display: grid;
         place-content: center;
+        margin-bottom: 1rem;
     }
 
     .Options {
@@ -28,17 +29,6 @@
                 border-radius: 1rem;
                 padding: 0.25rem;
                 width: 100%;
-
-                option {
-                    padding: 0.25rem;
-                    border-top: 1px solid grey;
-
-                    :nth-child(1) {
-                        border-top: none;
-                    }
-                }
-
-
             }
         }
     }
