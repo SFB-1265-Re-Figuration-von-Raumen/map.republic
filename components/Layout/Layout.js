@@ -1,5 +1,5 @@
 import Nav from '@/components/Nav/Nav';
-import { UserProvider } from '@/pages/api/authContext';
+import { UserProvider } from '@/lib/authContext';
 
 const Layout = ({ user, loading = false, children }) => (
     <UserProvider value={{ user, loading }}>

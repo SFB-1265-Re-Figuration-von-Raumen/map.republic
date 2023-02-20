@@ -4,8 +4,13 @@ import Avatar from 'avataaars'
 import options from './Options';
 import { useState } from 'react';
 import styles from './AvatarGenerator.module.scss';
+import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/lib/auth';
+import { useRouter } from 'next/router';
 
 const AvatarGenerator = () => {
+    const [NewAvatar, setNewAvatar] = useState(null);
+    const router = useRouter();
+
     const [Attributes, setAttributes] = useState({
         avatarStyle: "Circle",
         topType: "ShortHairDreads02",
@@ -19,14 +24,39 @@ const AvatarGenerator = () => {
         mouthType: "Smile",
         avatarStyle: "Circle",
         skinColor: "Light",
-        viewBox: "0 0 100 100"
     });
+
+    const uploadToClient = (event) => {
+        setNewAvatar(Attributes)
+        // if (event.target.files && event.target.files[0]) {
+        //     const tmpImage = event.target.files[0];
+        //     setImage(tmpImage);
+        // }
+    };
+
+    const uploadToServer = async () => {
+        const formData = new FormData();
+        const avatar = Attributes;
+        formData.append('Avatar', avatar);
+        formData.append('user_id', await getIdFromLocalCookie());
+        console.log(formData)
+        try {
+            const responseData = await fetcher('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            if (responseData.message === 'success') {
+                router.reload('/profile');
+            }
+        } catch (error) {
+            console.error(JSON.stringify(error));
+        }
+    };
 
     // // onclick function that pushes the attributes to the avatar property accociated with the current user
     // const setUserAvatar = (Attributes) => {
     //     console.log("Attributes: ", Attributes)
     // }
-
     return (
         <div className={styles.Container}>
             <div className={styles.AvatarWrapper}>
@@ -47,7 +77,7 @@ const AvatarGenerator = () => {
                                     });
                                 }}
                                 value={Attributes[option.attribute]}
-                                // selected={Attributes[option.attribute] === value}
+                            // selected={Attributes[option.attribute] === value}
                             >
                                 {option.values.map((value) => {
                                     return (
@@ -64,7 +94,14 @@ const AvatarGenerator = () => {
                     );
                 })}
             </div>
-            {/* <button onClick={
+            <button
+                type="submit"
+                onClick={() => uploadToServer}
+                className={styles.SubmitAvatar}
+            >
+                Set Profile Image
+            </button>
+            {/* <button className={styles.SubmitAvatar} onClick={
                 () => setUserAvatar(Attributes)
             }>Confirm Choice</button> */}
         </div>

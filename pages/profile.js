@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Layout from '@/components/Layout/Layout';
-import { fetcher } from '@/pages/api/fetcher';
-import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/pages/api/auth';
-import { useFetchUser } from '@/pages/api/authContext';
+import { fetcher } from '@/lib/fetcher';
+import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/lib/auth';
+import { useFetchUser } from '@/lib/authContext';
 import AvatarGenerator from '@/components/AvatarGenerator/AvatarGenerator';
 
 const Profile = ({ avatar }) => {
@@ -20,7 +20,8 @@ const Profile = ({ avatar }) => {
     const uploadToServer = async () => {
         const formData = new FormData();
         const file = image;
-        formData.append('inputFile', file);
+        // const avatar = /
+        // formData.append('inputFile', file);
         formData.append('user_id', await getIdFromLocalCookie());
         try {
             const responseData = await fetcher('/api/upload', {

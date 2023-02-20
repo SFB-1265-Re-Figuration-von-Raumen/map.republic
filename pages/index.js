@@ -1,9 +1,9 @@
-import { fetcher } from "./api/fetcher";
+import { fetcher } from "@/lib/fetcher";
 import Image from "next/image";
 import { IconGallery } from "@/components/IconGallery/IconGallery";
 import Nav from "@/components/Nav/Nav";
 import Layout from "@/components/Layout/Layout";
-import { useFetchUser } from "@/pages/api/authContext";
+import { useFetchUser } from "@/lib/authContext";
 // const { useFetchUser } = require('@/pages/api/authContext');
 
 export default function Home({ icons }) {

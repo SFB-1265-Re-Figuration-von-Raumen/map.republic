@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
-import { fetcher } from '@/pages/api/fetcher';
-import { setToken, unsetToken } from '/pages/api/auth';
-import { useUser } from '@/pages/api/authContext'
+import { fetcher } from '@/lib/fetcher';
+import { setToken, unsetToken } from '/lib/auth';
+import { useUser } from '@/lib/authContext'
 import styles from './Nav.module.scss';
 
 const Nav = () => {
