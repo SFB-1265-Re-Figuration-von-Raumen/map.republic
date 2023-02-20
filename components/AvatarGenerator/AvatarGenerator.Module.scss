@@ -1,0 +1,18 @@
+.Container {
+    border: 2px solid grey;
+    border-radius: 1rem;
+
+    .Options {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        justify-content: space-between;
+        padding: 1rem;
+
+        .OptionElement {
+            border: 1px solid rgb(172, 172, 172);
+            border-radius: 1rem;
+            padding: 0.25rem
+        }
+    }
+}

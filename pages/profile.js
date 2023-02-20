@@ -1,10 +1,10 @@
-// import { data } from 'autoprefixer';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Layout from '@/components/Layout/Layout';
 import { fetcher } from '@/pages/api/fetcher';
 import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/pages/api/auth';
 import { useFetchUser } from '@/pages/api/authContext';
+import AvatarGenerator from '@/components/AvatarGenerator/AvatarGenerator';
 
 const Profile = ({ avatar }) => {
     const { user, loading } = useFetchUser();
@@ -44,7 +44,8 @@ const Profile = ({ avatar }) => {
                     </span>
                     <span>👋</span>
                 </h1>
-                {avatar === 'default_avatar' && (
+                <AvatarGenerator />
+                {/* {avatar === 'default_avatar' && (
                     <div>
                         <h4>Select an image to upload</h4>
                         <input type="file" onChange={uploadToClient} />
@@ -56,14 +57,14 @@ const Profile = ({ avatar }) => {
                             Set Profile Image
                         </button>
                     </div>
-                )}
+                )} */}
                 {/* eslint-disable @next/next/no-img-element */}
-                {avatar && (
+                {/* {avatar && (
                     <img
                         src={`https://res.cloudinary.com/tamas-demo/image/upload/f_auto,q_auto,w_150,h_150,g_face,c_thumb,r_max/${avatar}`}
                         alt="Profile"
                     />
-                )}
+                )} */}
             </>
         </Layout>
     );

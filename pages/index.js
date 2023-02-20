@@ -1,7 +1,7 @@
 import { fetcher } from "./api/fetcher";
 import Image from "next/image";
 import { IconGallery } from "@/components/IconGallery/IconGallery";
-import Nav from "@/components/Nav";
+import Nav from "@/components/Nav/Nav";
 import Layout from "@/components/Layout/Layout";
 import { useFetchUser } from "@/pages/api/authContext";
 // const { useFetchUser } = require('@/pages/api/authContext');
