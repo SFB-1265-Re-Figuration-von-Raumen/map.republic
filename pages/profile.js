@@ -11,30 +11,30 @@ const Profile = ({ avatar }) => {
     const [image, setImage] = useState(null);
     const router = useRouter();
 
-    const uploadToClient = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            const tmpImage = event.target.files[0];
-            setImage(tmpImage);
-        }
-    };
-    const uploadToServer = async () => {
-        const formData = new FormData();
-        const file = image;
-        // const avatar = /
-        // formData.append('inputFile', file);
-        formData.append('user_id', await getIdFromLocalCookie());
-        try {
-            const responseData = await fetcher('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-            if (responseData.message === 'success') {
-                router.reload('/profile');
-            }
-        } catch (error) {
-            console.error(JSON.stringify(error));
-        }
-    };
+    // const uploadToClient = (event) => {
+    //     if (event.target.files && event.target.files[0]) {
+    //         const tmpImage = event.target.files[0];
+    //         setImage(tmpImage);
+    //     }
+    // };
+    // const uploadToServer = async () => {
+    //     const formData = new FormData();
+    //     const file = image;
+    //     // const avatar = /
+    //     // formData.append('inputFile', file);
+    //     formData.append('user_id', await getIdFromLocalCookie());
+    //     try {
+    //         const responseData = await fetcher('/api/upload', {
+    //             method: 'POST',
+    //             body: formData,
+    //         });
+    //         if (responseData.message === 'success') {
+    //             router.reload('/profile');
+    //         }
+    //     } catch (error) {
+    //         console.error(JSON.stringify(error));
+    //     }
+    // };
     return (
         <Layout user={user}>
             <>

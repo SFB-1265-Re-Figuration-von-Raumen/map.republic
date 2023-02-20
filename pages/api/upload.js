@@ -1,6 +1,6 @@
 import { IncomingForm } from 'formidable';
 import cloudinary from 'cloudinary';
-import { getTokenFromServerCookie } from 'lib/auth';
+import { getTokenFromServerCookie } from '@/lib/auth';
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -16,7 +16,7 @@ export const config = {
 
 export default async function upload(req, res) {
     if (req.method === 'POST') {
-        console.log(req)
+        console.log("req:", req, "res:", res)
         const data = await new Promise((resolve, reject) => {
             const form = new IncomingForm();
 
@@ -28,10 +28,10 @@ export default async function upload(req, res) {
         const file = data?.files?.inputFile.filepath;
         const { user_id } = data.fields;
         try {
-            const response = await cloudinary.v2.uploader.upload(file, {
-                public_id: user_id,
-            });
-            const { public_id } = response;
+            // const response = await cloudinary.v2.uploader.upload(file, {
+            //     public_id: user_id,
+            // });
+            // const { public_id } = response;
             const jwt = getTokenFromServerCookie(req);
             const userResponse = await fetch(
                 `${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${user_id}`,

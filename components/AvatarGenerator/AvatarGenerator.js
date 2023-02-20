@@ -37,8 +37,7 @@ const AvatarGenerator = () => {
     const uploadToServer = async () => {
         console.log(Attributes)
         const formData = new FormData();
-        const avatar = Attributes;
-        formData.append('Avatar', avatar);
+        formData.append('Avatar', JSON.stringify(Attributes));
         formData.append('user_id', await getIdFromLocalCookie());
         console.log(formData)
         try {
