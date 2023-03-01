@@ -46,7 +46,7 @@ const Nav = () => {
     }
   }, [user]);
 
-  return loggedin && (
+  return (
     <div className={styles.Profile}>
       {!loading &&
         (user ? (
