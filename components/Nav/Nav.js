@@ -56,55 +56,15 @@ const Nav = () => {
         ) : (
           ""
         ))}
-      {!loading &&
-        (user ? (
-          <li>
-            <a
-              className="md:p-2 py-2 block hover:text-purple-400"
-              onClick={logout}
-              style={{ cursor: "pointer" }}
-            >
-              Logout
-            </a>
-          </li>
-        ) : (
-          ""
-        ))}
-      {!loading && !user ? (
-        <>
-          <li>
-            <form onSubmit={handleSubmit} className="form-inline">
-              <input
-                type="text"
-                name="identifier"
-                onChange={handleChange}
-                placeholder="Username"
-                className="md:p-2 form-input py-2 rounded mx-2"
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                placeholder="Password"
-                className="md:p-2 form-input py-2 rounded mx-2"
-                required
-              />
-
-              <button
-                className="md:p-2 rounded py-2 text-black bg-purple-200 p-2"
-                type="submit"
-              >
-                Login
-              </button>
-            </form>
-          </li>
-          <li>
-            <Link href="/register">Register</Link>
-          </li>
-        </>
-      ) : (
-        ""
+      {!loading && user && (
+        <li>
+          <a
+            onClick={logout}
+            style={{ cursor: "pointer" }}
+          >
+            Logout
+          </a>
+        </li>
       )}
     </div>
   );

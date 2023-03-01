@@ -6,7 +6,6 @@ import Layout from "@/components/Layout/Layout";
 import { getIdFromLocalCookie, getTokenFromServerCookie } from "@/lib/auth";
 import { useFetchUser } from "@/lib/authContext";
 import { fetcher } from "@/lib/fetcher";
-// import AvatarGenerator from '@/components/AvatarGenerator/AvatarGenerator';
 import options from "@/components/AvatarGenerator/Options";
 
 const Profile = ({ avatarConfig }) => {

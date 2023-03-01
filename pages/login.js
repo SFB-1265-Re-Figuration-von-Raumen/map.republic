@@ -1,22 +1,17 @@
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetcher } from "@/lib/fetcher";
 import { setToken, unsetToken } from "/lib/auth";
-import { useUser } from "@/lib/authContext";
-import styles from "./Nav.module.scss";
+import { UserProvider, useUser } from "@/lib/authContext";
+import styles from "@/styles/Login.module.scss";
+import { Formik } from "formik";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-const Nav = () => {
-  const [data, setData] = useState({
-    identifier: "",
-    password: "",
-  });
-
-  const { user, loading } = useUser();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const responseData = await fetcher(
+const Login = () => {
+  const { user } = useUser();
+  const router = useRouter();
+  const handleSubmit = async (values) => {
+    const response = await fetch(
       `${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local`,
       {
         method: "POST",
@@ -24,90 +19,80 @@ const Nav = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          identifier: data.identifier,
-          password: data.password,
+          identifier: values.email,
+          password: values.password,
         }),
       }
     );
-    setToken(responseData);
-  };
 
-  const logout = () => {
-    unsetToken();
-  };
+    const status = await response.status;
+    const data = await response.json();
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-  const [loggedin, setLoggedin] = useState(false);
-  useEffect(() => {
-    if (user) {
-      setLoggedin(true);
+    setToken(data);
+    if (status === 200) {
+      router.push("/");
     }
-  }, [user]);
+  };
 
   return (
-    <div className={styles.Profile}>
-      {!loading &&
-        (user ? (
-          <li>
-            <Link href="/profile">Profile</Link>
-          </li>
-        ) : (
-          ""
-        ))}
-      {!loading &&
-        (user ? (
-          <li>
-            <a
-              className="md:p-2 py-2 block hover:text-purple-400"
-              onClick={logout}
-              style={{ cursor: "pointer" }}
-            >
-              Logout
-            </a>
-          </li>
-        ) : (
-          ""
-        ))}
-      {!loading && !user ? (
-        <>
-          <li>
-            <form onSubmit={handleSubmit} className="form-inline">
-              <input
-                type="text"
-                name="identifier"
-                onChange={handleChange}
-                placeholder="Username"
-                className="md:p-2 form-input py-2 rounded mx-2"
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                placeholder="Password"
-                className="md:p-2 form-input py-2 rounded mx-2"
-                required
-              />
-
-              <button
-                className="md:p-2 rounded py-2 text-black bg-purple-200 p-2"
-                type="submit"
-              >
-                Login
-              </button>
-            </form>
-          </li>
-          <li>
-            <Link href="/register">Register</Link>
-          </li>
-        </>
-      ) : (
-        ""
-      )}
+    <div className={styles.Container}>
+      <h1>logo goes here</h1>
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validate={(values) => {
+          const errors = {};
+          if (!values.email) {
+            errors.email = "Required";
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          ) {
+            errors.email = "Invalid email address";
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          handleSubmit(values);
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              name="email"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.email}
+            />
+            {errors.email && touched.email && errors.email}
+            <input
+              type="password"
+              name="password"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.password}
+            />
+            {errors.password && touched.password && errors.password}
+            <button type="submit" disabled={isSubmitting}>
+              Login
+            </button>
+          </form>
+        )}
+      </Formik>
+      <div>
+        <h2>
+          Don't have an account? <Link href="/register">Register</Link>
+        </h2>
+      </div>
     </div>
   );
 };
 
-export default Nav;
+export default Login;

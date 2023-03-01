@@ -14,6 +14,7 @@
     "avataaars": "^2.0.0",
     "file-saver": "^2.0.5",
     "formidable": "^2.1.1",
+    "formik": "^2.2.9",
     "framer-motion": "^9.0.2",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
