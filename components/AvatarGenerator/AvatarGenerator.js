@@ -6,6 +6,7 @@ import { useState } from 'react';
 import styles from './AvatarGenerator.module.scss';
 import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/lib/auth';
 import { useRouter } from 'next/router';
+import { fetcher } from '@/lib/fetcher';
 
 const AvatarGenerator = () => {
     const [NewAvatar, setNewAvatar] = useState(null);
@@ -26,27 +27,23 @@ const AvatarGenerator = () => {
         skinColor: "Light",
     });
 
-    const uploadToClient = (event) => {
-        setNewAvatar(Attributes)
-        // if (event.target.files && event.target.files[0]) {
-        //     const tmpImage = event.target.files[0];
-        //     setImage(tmpImage);
-        // }
-    };
-
-    const uploadToServer = async () => {
-        console.log(Attributes)
+    // const changeForm 
+    const submitAvatarChange = async () => {
+        console.log("Attributes:", JSON.stringify(Attributes))
         const formData = new FormData();
         formData.append('Avatar', JSON.stringify(Attributes));
         formData.append('user_id', await getIdFromLocalCookie());
-        console.log(formData)
+        console.log("Formdata:", formData)
         try {
-            const responseData = await fetcher('/api/upload', {
+            console.log("tried")
+            const responseData = await fetcher('/api/changeAvatar', {
+                // const responseData = await fetcher('/api/upload', {
                 method: 'POST',
                 body: formData,
             });
             if (responseData.message === 'success') {
                 router.reload('/profile');
+                console.log("success!")
             }
         } catch (error) {
             console.error(JSON.stringify(error));
@@ -64,39 +61,39 @@ const AvatarGenerator = () => {
             </div>
             <div className={styles.Options}>
 
-                {options.map((option) => {
-                    return (
-                        <div className={styles.OptionElement}
-                            key={option.label}>
-                            <h3>{option.label}</h3>
-                            <select
-                                onChange={(e) => {
-                                    setAttributes({
-                                        ...Attributes,
-                                        [option.attribute]: e.target.value,
-                                    });
-                                }}
-                                value={Attributes[option.attribute]}
-                            // selected={Attributes[option.attribute] === value}
-                            >
-                                {option.values.map((value) => {
-                                    return (
-                                        <option
-                                            key={value}
-                                            value={value}
-                                        >
-                                            {value}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
-                    );
-                })}
+                    {options.map((option) => {
+                        return (
+                            <div className={styles.OptionElement}
+                                key={option.label}>
+                                <h3>{option.label}</h3>
+                                <select
+                                    onChange={(e) => {
+                                        setAttributes({
+                                            ...Attributes,
+                                            [option.attribute]: e.target.value,
+                                        });
+                                    }}
+                                    value={Attributes[option.attribute]}
+                                >
+                                    {option.values.map((value) => {
+                                        return (
+                                            <option
+                                                key={value}
+                                                value={value}
+                                            >
+                                                {value}
+                                            </option>
+                                        );
+                                    })}
+                                </select>
+                            </div>
+                        );
+                    })}
+                {/* </form> */}
             </div>
             <button
                 type="submit"
-                onClick={() => uploadToServer()}
+                onClick={submitAvatarChange}
                 className={styles.SubmitAvatar}
             >
                 Set Profile Image

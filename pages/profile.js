@@ -38,9 +38,9 @@ const Profile = ({ avatar }) => {
     return (
         <Layout user={user}>
             <>
-                <h1 className="text-5xl font-bold">
+                <h1>
                     Welcome back{' '}
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                    <span>
                         {user}
                     </span>
                     <span>👋</span>

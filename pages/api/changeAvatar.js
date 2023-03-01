@@ -1,12 +1,6 @@
+// import { IncomingForm } from 'formidable';
 import { IncomingForm } from 'formidable';
-import cloudinary from 'cloudinary';
 import { getTokenFromServerCookie } from '@/lib/auth';
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-    secure: true,
-});
 
 export const config = {
     api: {
@@ -14,25 +8,23 @@ export const config = {
     },
 };
 
-export default async function upload(req, res) {
+export default async function changeAvatar(req, res) {
+    console.log(req, res)
     if (req.method === 'POST') {
         console.log("req:", req, "res:", res)
         const data = await new Promise((resolve, reject) => {
             const form = new IncomingForm();
 
-            form.parse(req, (err, fields, files) => {
+            form.parse(req, (err, fields) => {
                 if (err) return reject(err);
-                resolve({ fields, files });
+                resolve({ fields });
             });
-        });
-        const file = data?.files?.inputFile.filepath;
+        })
+
         const { user_id } = data.fields;
-        const { avatar } = data.fields;
         try {
-            // const response = await cloudinary.v2.uploader.upload(file, {
-            //     public_id: user_id,
-            // });
-            // const { public_id } = response;
+
+            const { newAvatar } = data.fields
             const jwt = getTokenFromServerCookie(req);
             const userResponse = await fetch(
                 `${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${user_id}`,
@@ -43,7 +35,7 @@ export default async function upload(req, res) {
                         Authorization: `Bearer ${jwt}`,
                     },
                     body: JSON.stringify({
-                        avatar: avatar,
+                        Avatar: newAvatar,
                     }),
                 }
             );
