@@ -15,8 +15,8 @@ export const config = {
 };
 
 export default async function upload(req, res) {
+    console.log("req")
     if (req.method === 'POST') {
-        console.log(req)
         const data = await new Promise((resolve, reject) => {
             const form = new IncomingForm();
 

@@ -2,13 +2,13 @@ import styles from "./IconGallery.module.scss";
 import Image from "next/image";
 
 export const IconGallery = ({ icons }) => {
-  console.log(icons);
+  // console.log(icons);
 
   // find all unique categories in the icons
   const categories = icons.data?.map((icon) => icon.attributes.Category);
   const uniqueCategories = [...new Set(categories)];
-  console.log("unique categories:")
-  console.log(uniqueCategories);
+  // console.log("unique categories:")
+  // console.log(uniqueCategories);
 
   // for each unique category, filter the icons and create a new array
   const categorizedItems = [];
