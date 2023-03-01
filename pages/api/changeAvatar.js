@@ -2,28 +2,20 @@
 import { IncomingForm } from 'formidable';
 import { getTokenFromServerCookie } from '@/lib/auth';
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
+// export const config = {
+//     api: {
+//         bodyParser: false,
+//     },
+// };
 
 export default async function changeAvatar(req, res) {
+    console.log(`zeig cookie\n${req.headers.cookie}`)
     if (req.method === 'POST') {
-        // console.log("req:", req, "res:", res)
-        const data = await new Promise((resolve, reject) => {
-            const form = new IncomingForm();
 
-            form.parse(req, (err, fields) => {
-                if (err) return reject(err);
-                resolve({ fields });
-            });
-        })
-
-        const { user_id } = data.fields;
+        const { Avatar, user_id } = req.body;
         try {
+            console.log(`req.body: ${JSON.stringify(req.body)}`)
 
-            const { newAvatar } = data.fields
             const jwt = getTokenFromServerCookie(req);
             const userResponse = await fetch(
                 `${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${user_id}`,
@@ -34,7 +26,7 @@ export default async function changeAvatar(req, res) {
                         Authorization: `Bearer ${jwt}`,
                     },
                     body: JSON.stringify({
-                        Avatar: newAvatar,
+                        Avatar: Avatar,
                     }),
                 }
             );
@@ -47,3 +39,40 @@ export default async function changeAvatar(req, res) {
         return res.status(403).send('Forbidden');
     }
 }
+
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
+
+// export default async function changeAvatar(req, res) {
+//   if (req.method === 'POST') {
+//     const { newAvatar, user_id } = req.body;
+//     try {
+//       const jwt = getTokenFromServerCookie(req);
+
+//       const userResponse = await fetch(
+//         `${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${user_id}`,
+//         {
+//           method: 'PUT',
+//           headers: {
+//             'Content-Type': 'application/json',
+//             Authorization: `Bearer ${jwt}`,
+//           },
+//           body: JSON.stringify({
+//             Avatar: avatar,
+//           }),
+//         }
+//       );
+
+//       const data = await userResponse.json();
+//       return res.json({ message: 'success' });
+//     } catch (error) {
+//       console.error(JSON.stringify(error));
+//       return res.status(500).json({ message: 'error' });
+//     }
+//   } else {
+//     return res.status(403).send('Forbidden');
+//   }
+// }

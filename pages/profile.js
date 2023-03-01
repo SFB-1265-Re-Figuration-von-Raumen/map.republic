@@ -1,46 +1,57 @@
+import Avatar from 'avataaars';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import styles from '@/components/AvatarGenerator/AvatarGenerator.module.scss';
 import Layout from '@/components/Layout/Layout';
-import { fetcher } from '@/lib/fetcher';
 import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/lib/auth';
 import { useFetchUser } from '@/lib/authContext';
+import { fetcher } from '@/lib/fetcher';
 // import AvatarGenerator from '@/components/AvatarGenerator/AvatarGenerator';
-import { Avatar } from 'avataaars';
-import styles from '@/components/AvatarGenerator/AvatarGenerator.module.scss';
 import options from '@/components/AvatarGenerator/Options';
 
-
-const Profile = ({ avatar }) => {
+const Profile = ({ avatarConfig }) => {
+    console.log(avatarConfig)
+    const storedUserAvatar = JSON.parse(avatarConfig)
+    console.log(storedUserAvatar)
     const { user, loading } = useFetchUser();
-    // const [image, setImage] = useState(null);
     const router = useRouter();
 
-    const [NewAvatar, setNewAvatar] = useState(null);
-    const [Attributes, setAttributes] = useState({
-        avatarStyle: "Circle",
-        topType: "ShortHairDreads02",
-        accessoriesType: "Prescription02",
-        hairColor: "BrownDark",
-        facialHairType: "Blank",
-        clotheType: "Hoodie",
-        clotheColor: "PastelBlue",
-        eyeType: "Happy",
-        eyebrowType: "Default",
-        mouthType: "Smile",
-        avatarStyle: "Circle",
-        skinColor: "Light",
-    });
+    const [Attributes, setAttributes] = useState(storedUserAvatar)
+    // const [Attributes, setAttributes] = useState({
+    //     avatarStyle: "Circle",
+    //     topType: "ShortHairDreads02",
+    //     accessoriesType: "Prescription02",
+    //     hairColor: "BrownDark",
+    //     facialHairType: "Blank",
+    //     clotheType: "Hoodie",
+    //     clotheColor: "PastelBlue",
+    //     eyeType: "Happy",
+    //     eyebrowType: "Default",
+    //     mouthType: "Smile",
+    //     avatarStyle: "Circle",
+    //     skinColor: "Light",
+    // });
 
     const submitAvatarChange = async () => {
         const formData = new FormData();
-        formData.append('Avatar', JSON.stringify(Attributes));
-        formData.append('user_id', await getIdFromLocalCookie());
+        const avatarString = JSON.stringify(Attributes);
+        const id = await getIdFromLocalCookie();
+        // console.log(`attributes go like this\n${JSON.stringify(Attributes)}`)
+        // formData.append('Avatar', avatarString);
+        // formData.append('user_id', await getIdFromLocalCookie());
+
+        // console.log(Attributes)
+        // console.log(`avatarString looks like this...\n${avatarString}`)
+        // const avatarString = JSON.stringify(Attributes);
+        // console.log(`LOOK AT THIS AVATAR SITTING IN THE FORMDATA:\n${formData.get('Avatar')}`)
         try {
             console.log("tried")
             const responseData = await fetcher('/api/changeAvatar', {
-                // const responseData = await fetcher('/api/upload', {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ Avatar: avatarString, user_id: id }),
             });
             if (responseData.message === 'success') {
                 router.reload('/profile');
@@ -52,30 +63,6 @@ const Profile = ({ avatar }) => {
         }
     };
 
-    // const uploadToClient = (event) => {
-    //     if (event.target.files && event.target.files[0]) {
-    //         const tmpImage = event.target.files[0];
-    //         setImage(tmpImage);
-    //     }
-    // };
-    // const uploadToServer = async () => {
-    //     const formData = new FormData();
-    //     const file = image;
-    //     // const avatar = /
-    //     // formData.append('inputFile', file);
-    //     formData.append('user_id', await getIdFromLocalCookie());
-    //     try {
-    //         const responseData = await fetcher('/api/upload', {
-    //             method: 'POST',
-    //             body: formData,
-    //         });
-    //         if (responseData.message === 'success') {
-    //             router.reload('/profile');
-    //         }
-    //     } catch (error) {
-    //         console.error(JSON.stringify(error));
-    //     }
-    // };
     return (
         <Layout user={user}>
             <>
@@ -106,6 +93,7 @@ const Profile = ({ avatar }) => {
                                                 ...Attributes,
                                                 [option.attribute]: e.target.value,
                                             });
+                                            console.log(Attributes)
                                         }}
                                         value={Attributes[option.attribute]}
                                     >
@@ -133,27 +121,6 @@ const Profile = ({ avatar }) => {
                     </button>
 
                 </div>
-                {/* <AvatarGenerator/> */}
-                {/* {avatar === 'default_avatar' && (
-                    <div>
-                        <h4>Select an image to upload</h4>
-                        <input type="file" onChange={uploadToClient} />
-                        <button
-                            className="md:p-2 rounded py-2 text-black bg-purple-200 p-2"
-                            type="submit"
-                            onClick={uploadToServer}
-                        >
-                            Set Profile Image
-                        </button>
-                    </div>
-                )} */}
-                {/* eslint-disable @next/next/no-img-element */}
-                {/* {avatar && (
-                    <img
-                        src={`https://res.cloudinary.com/tamas-demo/image/upload/f_auto,q_auto,w_150,h_150,g_face,c_thumb,r_max/${avatar}`}
-                        alt="Profile"
-                    />
-                )} */}
             </>
         </Layout>
     );
@@ -178,10 +145,10 @@ export async function getServerSideProps({ req }) {
                 },
             }
         );
-        const avatar = responseData.avatar ? responseData.avatar : 'default_avatar';
+        const Avatar = responseData.Avatar ? responseData.Avatar : 'default_avatar';
         return {
             props: {
-                avatar,
+                avatarConfig: Avatar,
             },
         };
     }

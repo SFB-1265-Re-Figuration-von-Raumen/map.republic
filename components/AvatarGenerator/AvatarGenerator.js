@@ -1,5 +1,3 @@
-// "use client"
-
 import Avatar from 'avataaars'
 import options from './Options';
 import { useState } from 'react';
