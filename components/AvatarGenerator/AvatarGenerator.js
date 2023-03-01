@@ -1,19 +1,15 @@
-// "use client"
-
 import Avatar from "avataaars";
 import options from "./Options";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./AvatarGenerator.module.scss";
 import { getIdFromLocalCookie, getTokenFromServerCookie } from "@/lib/auth";
 import { useRouter } from "next/router";
+import { fetcher } from "@/lib/fetcher";
 
-const AvatarGenerator = () => {
+const AvatarGenerator = ({ user }) => {
+  // console.log(`Logging user:\n${user}`)
   const [NewAvatar, setNewAvatar] = useState(null);
   const router = useRouter();
-  useEffect(() => {
-    console.log("profile page mounted");
-  }, []);
-  const id = getIdFromLocalCookie();
 
   const [Attributes, setAttributes] = useState({
     avatarStyle: "Circle",
@@ -30,43 +26,33 @@ const AvatarGenerator = () => {
     skinColor: "Light",
   });
 
-  const uploadToClient = (event) => {
-    setNewAvatar(Attributes);
-    // if (event.target.files && event.target.files[0]) {
-    //     const tmpImage = event.target.files[0];
-    //     setImage(tmpImage);
-    // }
-  };
-
-  const uploadToServer = async () => {
+  const submitAvatarChange = async () => {
     const formData = new FormData();
-    const avatar = Attributes;
-    formData.append("Avatar", avatar);
+    formData.append("Avatar", JSON.stringify(Attributes));
     formData.append("user_id", await getIdFromLocalCookie());
-
     try {
-      const responseData = await fetcher("/api/upload", {
+      console.log("tried");
+      const responseData = await fetcher("/api/changeAvatar", {
+        // const responseData = await fetcher('/api/upload', {
         method: "POST",
-        body: Attributes.toJSON(),
+        body: formData,
       });
-
       if (responseData.message === "success") {
         router.reload("/profile");
+        console.log("success!");
       }
     } catch (error) {
       console.error(JSON.stringify(error));
+      console.log("failed");
     }
   };
 
-  // // onclick function that pushes the attributes to the avatar property accociated with the current user
-  // const setUserAvatar = (Attributes) => {
-  //     console.log("Attributes: ", Attributes)
-  // }
   return (
     <div className={styles.Container}>
       <div className={styles.AvatarWrapper}>
         <Avatar {...Attributes} style={{ width: "300px", height: "300px" }} />
       </div>
+
       <div className={styles.Options}>
         {options.map((option) => {
           return (
@@ -80,7 +66,6 @@ const AvatarGenerator = () => {
                   });
                 }}
                 value={Attributes[option.attribute]}
-                // selected={Attributes[option.attribute] === value}
               >
                 {option.values.map((value) => {
                   return (
@@ -93,17 +78,15 @@ const AvatarGenerator = () => {
             </div>
           );
         })}
+        {/* </form> */}
       </div>
       <button
         type="submit"
-        onClick={() => uploadToServer()}
+        onClick={submitAvatarChange()}
         className={styles.SubmitAvatar}
       >
         Set Profile Image
       </button>
-      {/* <button className={styles.SubmitAvatar} onClick={
-                () => setUserAvatar(Attributes)
-            }>Confirm Choice</button> */}
     </div>
   );
 };

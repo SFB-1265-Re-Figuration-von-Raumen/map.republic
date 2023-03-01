@@ -10,10 +10,9 @@ const Layout = ({ user, role, loading = false, children }) => {
   useEffect(() => {
     if (user) {
       const getRole = async () => {
-        const role = await getRoleFromLocalCookie();
-        setRoleType(role.type);
+        const type = await role.type;
+        setRoleType(type);
         setRoleLoaded(true);
-        return role;
       };
       getRole();
     }
@@ -27,19 +26,7 @@ const Layout = ({ user, role, loading = false, children }) => {
       mounted && (
         <UserProvider value={{ user, loading, role }}>
           <Nav />
-
-          <div
-            style={{
-              height: `${window?.innerHeight}px`,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: "2rem",
-              fontWeight: "bold",
-            }}
-          >
-            Logged in as {roleType}
-          </div>
+          {children}
         </UserProvider>
       )
     );
@@ -48,19 +35,7 @@ const Layout = ({ user, role, loading = false, children }) => {
       mounted && (
         <UserProvider value={{ user, loading, role }}>
           <Nav />
-
-          <div
-            style={{
-              height: `${window?.innerHeight}px`,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: "2rem",
-              fontWeight: "bold",
-            }}
-          >
-            Logged in as {roleType}
-          </div>
+          {children}
         </UserProvider>
       )
     );
