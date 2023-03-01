@@ -36,14 +36,6 @@ const Profile = ({ avatarConfig }) => {
         const formData = new FormData();
         const avatarString = JSON.stringify(Attributes);
         const id = await getIdFromLocalCookie();
-        // console.log(`attributes go like this\n${JSON.stringify(Attributes)}`)
-        // formData.append('Avatar', avatarString);
-        // formData.append('user_id', await getIdFromLocalCookie());
-
-        // console.log(Attributes)
-        // console.log(`avatarString looks like this...\n${avatarString}`)
-        // const avatarString = JSON.stringify(Attributes);
-        // console.log(`LOOK AT THIS AVATAR SITTING IN THE FORMDATA:\n${formData.get('Avatar')}`)
         try {
             console.log("tried")
             const responseData = await fetcher('/api/changeAvatar', {
