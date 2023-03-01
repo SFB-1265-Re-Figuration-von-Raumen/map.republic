@@ -9,9 +9,8 @@ export const config = {
 };
 
 export default async function changeAvatar(req, res) {
-    console.log(req, res)
     if (req.method === 'POST') {
-        console.log("req:", req, "res:", res)
+        // console.log("req:", req, "res:", res)
         const data = await new Promise((resolve, reject) => {
             const form = new IncomingForm();
 

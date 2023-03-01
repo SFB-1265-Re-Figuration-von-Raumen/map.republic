@@ -8,7 +8,8 @@ import { getIdFromLocalCookie, getTokenFromServerCookie } from '@/lib/auth';
 import { useRouter } from 'next/router';
 import { fetcher } from '@/lib/fetcher';
 
-const AvatarGenerator = () => {
+const AvatarGenerator = ({ user }) => {
+    // console.log(`Logging user:\n${user}`)
     const [NewAvatar, setNewAvatar] = useState(null);
     const router = useRouter();
 
@@ -27,13 +28,10 @@ const AvatarGenerator = () => {
         skinColor: "Light",
     });
 
-    // const changeForm 
     const submitAvatarChange = async () => {
-        console.log("Attributes:", JSON.stringify(Attributes))
         const formData = new FormData();
         formData.append('Avatar', JSON.stringify(Attributes));
         formData.append('user_id', await getIdFromLocalCookie());
-        console.log("Formdata:", formData)
         try {
             console.log("tried")
             const responseData = await fetcher('/api/changeAvatar', {
@@ -47,19 +45,17 @@ const AvatarGenerator = () => {
             }
         } catch (error) {
             console.error(JSON.stringify(error));
+            console.log("failed")
         }
     };
 
-    // // onclick function that pushes the attributes to the avatar property accociated with the current user
-    // const setUserAvatar = (Attributes) => {
-    //     console.log("Attributes: ", Attributes)
-    // }
     return (
         <div className={styles.Container}>
             <div className={styles.AvatarWrapper}>
                 <Avatar {...Attributes} style={{ width: '300px', height: '300px' }} />
             </div>
-            <div className={styles.Options}>
+
+                <div className={styles.Options}>
 
                     {options.map((option) => {
                         return (
@@ -89,18 +85,16 @@ const AvatarGenerator = () => {
                             </div>
                         );
                     })}
-                {/* </form> */}
-            </div>
-            <button
-                type="submit"
-                onClick={submitAvatarChange}
-                className={styles.SubmitAvatar}
-            >
-                Set Profile Image
-            </button>
-            {/* <button className={styles.SubmitAvatar} onClick={
-                () => setUserAvatar(Attributes)
-            }>Confirm Choice</button> */}
+                    {/* </form> */}
+                </div>
+                <button
+                    type="submit"
+                    onClick={submitAvatarChange()}
+                    className={styles.SubmitAvatar}
+                >
+                    Set Profile Image
+                </button>
+
         </div>
     )
 }
