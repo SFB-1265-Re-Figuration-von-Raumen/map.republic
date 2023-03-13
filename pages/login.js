@@ -1,11 +1,34 @@
 import { fetcher } from "@/lib/fetcher";
-import { setToken, getTokenFromLocalCookie } from "/lib/auth";
+import {
+  setToken,
+  getTokenFromLocalCookie,
+  getRoleFromLocalCookie,
+} from "/lib/auth";
 import styles from "@/styles/Login.module.scss";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const Login = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const redirect = async () => {
+      const role = await getRoleFromLocalCookie();
+      const token = getTokenFromLocalCookie();
+      if (token) {
+        if (role === "analyst") {
+          router.push("/dashboard/admin");
+        }
+        if (role === "user") {
+          router.push("/dashboard/user");
+        }
+      }
+    };
+    redirect();
+  }, []);
+
   const handleSubmit = async (values) => {
     const responseData = await fetcher(
       `${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local`,

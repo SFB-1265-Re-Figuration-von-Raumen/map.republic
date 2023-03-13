@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "@/styles/Index.module.scss";
+import { unsetToken } from "@/lib/auth";
 
 const Index = () => {
   return (
@@ -8,6 +9,13 @@ const Index = () => {
       <Link href="/login">
         <button>login</button>
       </Link>
+      <button
+        onClick={() => {
+          unsetToken();
+        }}
+      >
+        logout
+      </button>
     </div>
   );
 };

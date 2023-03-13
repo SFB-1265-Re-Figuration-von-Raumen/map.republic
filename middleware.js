@@ -1,40 +1,48 @@
 // middleware.ts
 import { NextResponse, Nextrequest } from "next/server";
 import {
-  VerifyAuth,
   getTokenFromLocalCookie,
   getRoleFromLocalCookie,
+  validateToken,
 } from "@/lib/auth";
+const PUBLIC_FILE = /\.(.*)$/;
 
-export async function middleware(req = Nextrequest) {
-  const token = await getTokenFromLocalCookie();
-  const verifiedToken =
-    token && (await VerifyAuth(token).catch((err) => console.log(err)));
+export async function middleware(req) {
+  const { pathname } = req.nextUrl;
 
+  if (
+    pathname.startsWith("/_next") || // exclude Next.js internals
+    pathname.startsWith("/api") || //  exclude all API routes
+    pathname.startsWith("/static") || // exclude static files
+    PUBLIC_FILE.test(pathname) // exclude all files in the public folder
+  ) {
+    return NextResponse.next();
+  }
+  const token = getTokenFromLocalCookie();
   const role = await getRoleFromLocalCookie();
-  if (req.nextUrl.pathname === "/") {
+
+  if (pathname === "/") {
     return;
   }
-  if (req.nextUrl.pathname.startsWith("/login") && !verifiedToken) {
-    return;
-  }
-  if (verifiedToken) {
+
+  if (token) {
     if (role === "analyst") {
-      if (req.url.startsWith("/login")) {
+      if (pathname === "login") {
+        return NextResponse.redirect(new URL("/dashboard/admin", req.url));
+      }
+      if (pathname.startsWith("/dashboard/user")) {
         return NextResponse.redirect(new URL("/dashboard/admin", req.url));
       }
     }
     if (role === "user") {
-      if (req.url.startsWith("/login")) {
+      if (pathname === "login") {
         return NextResponse.redirect(new URL("/dashboard/user", req.url));
       }
+      if (pathname.startsWith("/dashboard/admin")) {
+        return NextResponse.redirect(new URL("/dashboard/user"), req.url);
+      }
     }
-  }
-  if (!verifiedToken) {
-    return NextResponse.redirect(new URL("/login", req.url));
+  } else {
+    return NextResponse.redirect(new URL("/", req.url));
   }
 }
-
-export const config = {
-  matcher: ["/login", "/profile", "/dashboard/admin", "/dashboard/user"],
-};
