@@ -5,7 +5,7 @@ import Nav from "@/components/Nav/Nav";
 import Layout from "@/components/Layout/Layout";
 import { useFetchUser } from "@/lib/authContext";
 
-export default function Home({ icons }) {
+export default function User({ icons }) {
   const { user, loading, role } = useFetchUser();
   return (
     <Layout user={user} role={role}>

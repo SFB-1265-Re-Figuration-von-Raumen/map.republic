@@ -1,7 +1,15 @@
-import React from "react";
+import Link from "next/link";
+import styles from "@/styles/Index.module.scss";
 
 const Index = () => {
-  return <h1>map republic</h1>;
+  return (
+    <div className={styles.Container}>
+      <h1>Welcome to Map Republic!</h1>
+      <Link href="/login">
+        <button>login</button>
+      </Link>
+    </div>
+  );
 };
 
 export default Index;

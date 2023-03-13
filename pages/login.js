@@ -1,32 +1,13 @@
-import { useEffect, useState } from "react";
 import { fetcher } from "@/lib/fetcher";
-import {
-  setToken,
-  getUserFromLocalCookie,
-  getRoleFromLocalCookie,
-} from "/lib/auth";
+import { setToken, getTokenFromLocalCookie } from "/lib/auth";
 import styles from "@/styles/Login.module.scss";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Login = () => {
-  const router = useRouter();
-  useEffect(() => {
-    const { jwt } = getUserFromLocalCookie();
-    if (jwt) {
-      const { role } = getRoleFromLocalCookie();
-      if (role === "anaylst") {
-        router.push("/dashboard/admin");
-      } else if (role === "user") {
-        router.push("/dashboard/user")
-      } else {
-        router.push("/404");
-      }
-    }
-  }, []);
   const handleSubmit = async (values) => {
-    const response = await fetch(
+    const responseData = await fetcher(
       `${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local`,
       {
         method: "POST",
@@ -39,14 +20,7 @@ const Login = () => {
         }),
       }
     );
-
-    const status = await response.status;
-    const data = await response.json();
-
-    setToken(data);
-    if (status === 200) {
-      router.push("/");
-    }
+    setToken(responseData);
   };
 
   return (
